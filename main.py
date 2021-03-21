@@ -10,21 +10,23 @@ from modules.logging import print
 
 
 def __init__():
-    # Config load part
-    config = configparser.ConfigParser()
-    config.read('settings.ini')
-
-    # Files including
-    files_paths = include(config)
-
     # Parsing args form cli
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--encrypt', help='Use it when you want to encrypt your files', action='store_true')
     parser.add_argument('-d', '--decrypt', help='Use it when you want to decrypt your files', action='store_true')
     parser.add_argument('-p', '--password', help='Use it to set password')
+    parser.add_argument('-c', '--config', help='Loads config from this file. Default is settings.ini',
+                        default='settings.ini')
     parser.add_argument('-s', '--silent', help='Silent mod', action='store_true')
     parser.add_argument('-l', '--logging', help='Logged all moves in log file', action='store_true')
     namespace = parser.parse_args(sys.argv[1:])
+
+    # Config load part
+    config = configparser.ConfigParser()
+    config.read(namespace.config)
+
+    # Files including
+    files_paths = include(config)
 
     # Check preferences (check README)
     logging = config['Settings']['logging'] == '1' or namespace.logging

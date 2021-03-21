@@ -24,6 +24,7 @@ def transform_in_absolute_paths(all_path_list: list, root: str):
             if check_dir(item):
                 absolute_paths.update(set(recursion_reading(item)))
             else:
+                print(item)
                 absolute_paths.add(item)
     return absolute_paths
 
@@ -32,7 +33,9 @@ def recursion_reading(directory: str, root: str = ''):
     """ Wrapper over os.walk """
     files_paths = []
     for item in os.walk(directory):
-        files_paths += [root + '/' + (item[0] + '\\' + path).replace('\\', '/') for path in item[2]]
+        files_paths += [root + '/' + (item[0] + '\\' + path).replace('\\', '/')
+                        if not check_abs((item[0] + '\\' + path).replace('\\', '/'))
+                        else (item[0] + '\\' + path).replace('\\', '/') for path in item[2]]
     return files_paths
 
 
